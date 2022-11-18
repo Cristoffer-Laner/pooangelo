@@ -1,79 +1,70 @@
-export class Sorveteria {
-    razao: string;
-    cnpj: number;
-    sorvetes: Sorvete[];
-    precoDeCusto: number;
-    private estoqueSorvetes: number;
-    mesas: number;
-    private caixa: number;
+import { DadosFinanceiros } from "./DadosFinanceiros";
+import { DadosFisicos } from "./DadosFisicos";
+import { DadosJuridicos } from "./DadosJuridicos";
+import { Jogo } from "./Jogo";
+// import { Sorvete } from "./Sorvetes";
 
-    constructor(razao: string, cnpj: number, sorvetes: Sorvete[], estoqueSorvetes: number) {
-        this.razao = razao
-        this.cnpj = cnpj
-        this.estoqueSorvetes = estoqueSorvetes
-        this.sorvetes = sorvetes
-        this.precoDeCusto = 10
-        this.mesas = 10
-        this.caixa = 0
+export class Sorveteria {
+    private dadosJuridicos: DadosJuridicos;
+
+    private dadosFinanceiros: DadosFinanceiros;
+
+    private dadosFisicos: DadosFisicos;
+
+    // private sorvetes: Sorvete[];
+
+    private jogo: Jogo;
+
+
+    constructor(estoqueSorvetes: number /*sorvetes: Sorvete[]*/) {
+        this.dadosJuridicos = new DadosJuridicos()
+        this.dadosFinanceiros = new DadosFinanceiros()
+        this.dadosFisicos = new DadosFisicos()
+        this.jogo = new Jogo()
+        // this.sorvetes = [...sorvetes]
     }
 
+    // Encapsulamento: gamificação
     private validarEstoque(): void {
-        if(this.estoqueSorvetes <= 5) {
-            console.log(`Atenção! Seu estoque está baixo!`)
-        }
-        if(this.estoqueSorvetes <= 0) {
-            throw new Error("Você ficou sem estoque")
-        }
+        this.jogo.validarEstoque()
     }
 
     private validarMesas(): void {
-        if(this.mesas <= 0) {
-            throw new Error("Você ficou sem mesas, os clientes ficaram na rua")
-        }
+        this.jogo.validarMesas()
     }
 
+    // Encapsulamento: Dados físicos
     verificarEstoque(): void {
-        console.log(this.estoqueSorvetes)
+        console.log(this.dadosFisicos.estoqueSorvetes)
     }
 
     darEntrada(qtd: number): void {
-        this.estoqueSorvetes += qtd
-        this.caixa -= (this.precoDeCusto * qtd)
+        this.dadosFisicos.darEntrada(qtd)
     }
 
-    venderSorvete(qtd: number): void {
-        if(this.mesas === 10) {
-            console.log("Não há cliente na sorveteria");
-            return
-        }
-        this.estoqueSorvetes -= qtd
+    venderSorvete(qtd: number, sabor: string): void {
+        this.dadosFisicos.estoqueSorvetes -= qtd
         this.validarEstoque()
-        this.caixa += qtd * 20
+        this.dadosFinanceiros.caixa += qtd * 20
     }
+
+    // aqui sucos
 
     ocuparMesa(qtd: number): void {
-        this.mesas -= qtd
+        this.dadosFisicos.mesas -= qtd
         this.validarMesas()
     }
     
     desocuparMesa(qtd: number): void {
-        this.mesas += qtd
+        this.dadosFisicos.mesas += qtd
         this.validarMesas()
-        if(this.mesas >= 10) {
-            this.mesas = 10
+        if(this.dadosFisicos.mesas >= 10) {
+            this.dadosFisicos.mesas = 10
         }
     }
 
-}
-
-export class Sorvete {
-    sabor: string;
-    preco: number;
-    qtd: number;
-
-    constructor(sabor: string, preco: number, qtd: number) {
-        this.sabor = sabor
-        this.preco = preco
-        this.qtd = qtd
+    verificarMesas(): number {
+        return this.dadosFisicos.verificarMesas()
     }
+
 }

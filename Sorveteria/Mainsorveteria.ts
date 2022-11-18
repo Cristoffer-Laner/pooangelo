@@ -1,9 +1,16 @@
 import PromptSync from "prompt-sync";
-import { Sorvete, Sorveteria } from "./Sorveteria";
+import { Sorveteria } from "./Sorveteria";
+import { Sorvete } from "./Sorvetes";
 
 const teclado = PromptSync();
 
-const sorveteria: Sorveteria = new Sorveteria("Sorveteria Avenida", 32371135000150, [new Sorvete("Chocolate", 15, 2), new Sorvete("Baunilha", 10, 4), new Sorvete("Chocolate", 15, 2)], 10);
+// A IDEIA É QUE OS SORVETES PASSADOS NO CONSTRUTOR DA SORVETERIA SEJAM VARIÁVEIS COM CLASSES DE SABORES QUE ESTÃO EXTENDENDO A CLASSE SORVETE
+// O SORVETES FILHOS TERÃO CARACTERISTICAS PRÓPRIAS QUE NEM TODO SORVETE TEM
+// O DE CHOCOLATE VAI COM PREFERÊNCIA DO CHOCOLATE (AMARGO, MEIO AMARGO, AO LEITE)
+// O DE CREME VAI COM BISCOITO WAFFLE
+// O DE MORANGO VAI COM PEDAÇOS DE MORANGO
+
+const sorveteria: Sorveteria = new Sorveteria(10 /*, [new Sorvete("Chocolate", 15, 2), new Sorvete("Creme", 10, 4), new Sorvete("Morango", 15, 2)]*/);
 
 let a = true
 
@@ -30,18 +37,19 @@ while (a) {
         break;
     case 3:
         const qtdVendida = +teclado("Digite quantos vendeu: ")
-        sorveteria.venderSorvete(qtdVendida)
+        const sabor = teclado("Digite o sabor que deseja: ")
+        sorveteria.venderSorvete(qtdVendida, sabor)
         break;
     case 4:
         const qtdOcupada = +teclado("Digite a quantidade: ")
         sorveteria.ocuparMesa(qtdOcupada)
-        console.log(`Agora estão livre(s) ${sorveteria.mesas} mesas`)
+        console.log(`Agora estão livre(s) ${sorveteria.verificarMesas()} mesas`)
         break;
     
     case 5:
       const qtdLiberada = +teclado("Digite a quantidade: ")
         sorveteria.desocuparMesa(qtdLiberada)
-        console.log(`Agora estão livre(s) ${sorveteria.mesas} mesas`)
+        console.log(`Agora estão livre(s) ${sorveteria.verificarMesas()} mesas`)
         break;
     
     case 6:
@@ -50,6 +58,7 @@ while (a) {
         break;
     case 0:
         a = false
+        break
 
     default:
         console.log("Opção inválida!");
